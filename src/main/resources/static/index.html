@@ -1,19 +1,61 @@
-<h2>Math Game Login</h2>
+<!DOCTYPE html>
+<html>
 
-<input id="email" placeholder="email">
-<input id="pass" placeholder="password">
+<head>
+    <title>Top Rankers</title>
 
-<button onclick="login()">Login</button>
+    <link rel="stylesheet" href="/css/game-theme.css">
 
-<hr>
+</head>
 
-<h3>Game</h3>
+<body>
 
-Class <input id="c" value="1">
-Level <input id="l" value="1">
+<div class="card">
 
-<button onclick="load()">Start</button>
+    <h2>Top Rankers</h2>
 
-<div id="game"></div>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Class</th>
+            <th>Rank 1 Player</th>
+            <th>Score</th>
+        </tr>
+        </thead>
 
-<script src="game.js"></script>
+        <tbody id="rankTable"></tbody>
+    </table>
+
+    <br>
+
+    <button onclick="location.href='login.html'">
+        Go To Login
+    </button>
+
+</div>
+
+<script>
+
+    fetch("/leaderboard/top-rankers")
+        .then(res => res.json())
+        .then(data => {
+
+            let table =
+                document.getElementById("rankTable");
+
+            data.forEach(r => {
+
+                table.innerHTML += `
+<tr>
+<td>${r.classNo}</td>
+<td>${r.player}</td>
+<td>${r.score}</td>
+</tr>`;
+            });
+
+        });
+
+</script>
+
+</body>
+</html>

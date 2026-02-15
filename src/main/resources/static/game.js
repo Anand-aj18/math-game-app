@@ -63,3 +63,42 @@ function ans(a){
     index++;
     show();
 }
+function selectAnswer(btn, correctAnswer, question) {
+
+    let selected = btn.dataset.value;
+
+    saveProgress(question, selected, correctAnswer);
+
+    let buttons = document.querySelectorAll(".answer-btn");
+    buttons.forEach(b => b.disabled = true);
+
+    if(selected === correctAnswer){
+
+        btn.style.background = "green";
+
+    }else{
+
+        btn.style.background = "red";
+
+        buttons.forEach(b=>{
+            if(b.dataset.value === correctAnswer)
+                b.style.background = "green";
+        });
+    }
+}
+function saveProgress(question, selected, correct) {
+
+    fetch("/game/save-progress", {
+
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+
+        body: JSON.stringify({
+            userId: currentUserId,
+            question: question,
+            selectedAnswer: selected,
+            correctAnswer: correct
+        })
+
+    });
+}

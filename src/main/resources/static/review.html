@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Answer Review</title>
+
+    <link rel="stylesheet" href="/css/game-theme.css">
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Answer Review</h2>
+
+    <div id="reviewArea">Loading...</div>
+
+    <br>
+
+    <button onclick="location='dashboard.html'">
+        Back
+    </button>
+
+</div>
+
+<script>
+
+    let userId = localStorage.getItem("reviewUser");
+
+    console.log("Review userId:", userId);
+
+    if(!userId){
+
+        document.getElementById("reviewArea").innerHTML =
+            "No review data found.";
+
+    }else{
+
+        fetch(`/game/review/${userId}`)
+            .then(r=>r.json())
+            .then(data=>{
+
+                if(data.length === 0){
+
+                    document.getElementById("reviewArea").innerHTML =
+                        "No answers saved.";
+
+                    return;
+                }
+
+                let out="";
+
+                data.forEach(q=>{
+
+                    let color =
+                        q.selectedAnswer === q.correctAnswer
+                            ? "green"
+                            : "red";
+
+                    out += `
+<div class="review-card">
+
+<p><b>Question:</b> ${q.question}</p>
+
+<p style="color:${color}">
+Your: ${q.selectedAnswer}
+</p>
+
+<p>Correct: ${q.correctAnswer}</p>
+
+<hr>
+
+</div>`;
+                });
+
+                document.getElementById("reviewArea").innerHTML = out;
+
+            })
+            .catch(err=>{
+
+                document.getElementById("reviewArea").innerHTML =
+                    "Error loading review.";
+
+                console.error(err);
+
+            });
+
+    }
+
+</script>
+
+</body>
+</html>

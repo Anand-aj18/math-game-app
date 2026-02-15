@@ -8,6 +8,8 @@ import java.util.List;
 public interface ScoreRepo extends JpaRepository<Score,Long> {
 
     List<Score> findTop10ByOrderByPointsDesc();
+
     List<Score> findTop10ByClassLevelOrderByPointsDesc(int classLevel);
 
+    Score findTopByClassLevelOrderByPointsDesc(int classLevel);
 }

@@ -1,9 +1,12 @@
 package com.game.demo.controller;
 
+import com.game.demo.entity.Progress;
 import com.game.demo.entity.Question;
 import com.game.demo.entity.Score;
+import com.game.demo.repository.ProgressRepository;
 import com.game.demo.repository.QuestionRepo;
 import com.game.demo.repository.ScoreRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +18,15 @@ public class GameController {
     private final QuestionRepo repo;
     private final ScoreRepo scoreRepo;
 
+    private final ProgressRepository progressRepository;
+
     public GameController(
             QuestionRepo repo,
-            ScoreRepo scoreRepo){
+            ScoreRepo scoreRepo, ProgressRepository progressRepository){
 
         this.repo = repo;
         this.scoreRepo = scoreRepo;
+        this.progressRepository = progressRepository;
     }
 
     @GetMapping("/questions")
@@ -53,6 +59,18 @@ public class GameController {
 
         return scoreRepo
                 .findTop10ByClassLevelOrderByPointsDesc(cls);
+    }
+
+    // Save each answer
+    @PostMapping("/save-progress")
+    public Progress saveProgress(@RequestBody Progress progress) {
+        return progressRepository.save(progress);
+    }
+
+    // Review answers
+    @GetMapping("/review/{userId}")
+    public List<Progress> review(@PathVariable Long userId) {
+        return progressRepository.findByUserId(userId);
     }
 
 }

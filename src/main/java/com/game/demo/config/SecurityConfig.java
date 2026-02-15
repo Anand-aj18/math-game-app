@@ -17,12 +17,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/index.html",
                                 "/login",
                                 "/login.html",
                                 "/player.html",
                                 "/class.html",
                                 "/game.html",
                                 "/dashboard.html",
+                                "/review.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"

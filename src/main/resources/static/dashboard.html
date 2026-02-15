@@ -2,16 +2,17 @@
     <link rel="stylesheet" href="/css/game-theme.css">
 </head>
 
-
 <div class="card">
 
     <h2>Dashboard</h2>
+
+    <br>
 
     <button onclick="loadBoard()">Show Leaderboard</button>
 
     <div id="board"></div>
 
-    <br><br>
+    <br>
 
     <button onclick="exitGame()">Exit</button>
 
@@ -19,11 +20,8 @@
 
 <script>
 
-    const playerInfo =
-        document.getElementById("playerInfo");
-
-    const board =
-        document.getElementById("board");
+    const playerInfo = document.getElementById("playerInfo");
+    const board = document.getElementById("board");
 
     playerInfo.innerHTML = `
 <h3>Player Info</h3>
@@ -36,22 +34,52 @@ Gender: ${localStorage.getItem("gender")}
 
         let cls = localStorage.getItem("class");
 
-        let r =
-            await fetch(`/game/leaderboard?cls=${cls}`);
-
+        let r = await fetch(`/game/leaderboard?cls=${cls}`);
         let data = await r.json();
 
-        board.innerHTML = "<h3>Leaderboard</h3>";
+        board.innerHTML = `
+<h3>Leaderboard</h3>
+<table border="1" width="100%">
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Age</th>
+<th>Gender</th>
+<th>Score</th>
+<th>Review</th>
+</tr>
+</table>
+`;
+
+        let table = board.querySelector("table");
 
         data.forEach((s,i)=>{
 
-            board.innerHTML += `
-        <div class="rank">
-            ${i+1}. ${s.username || s.user || "Player"}
-            (${s.age || "-"}, ${s.gender || "-"})
-            — ${s.points} pts
-        </div>`;
+            let userId = s.userId || s.id || 0;
+
+            table.innerHTML += `
+<tr>
+<td>${i+1}</td>
+<td>${s.username || s.user || "Player"}</td>
+<td>${s.age || "-"}</td>
+<td>${s.gender || "-"}</td>
+<td>${s.points}</td>
+<td>
+<button onclick="reviewUser(${userId})">
+Review
+</button>
+</td>
+</tr>`;
         });
+    }
+
+    function reviewUser(userId){
+
+// store selected user
+        localStorage.setItem("reviewUser", userId);
+
+// go to review page
+        location = "review.html";
     }
 
     function exitGame(){
