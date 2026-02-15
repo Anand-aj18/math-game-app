@@ -1,0 +1,63 @@
+<head>
+    <link rel="stylesheet" href="/css/game-theme.css">
+</head>
+
+
+<div class="card">
+
+    <h2>Dashboard</h2>
+
+    <button onclick="loadBoard()">Show Leaderboard</button>
+
+    <div id="board"></div>
+
+    <br><br>
+
+    <button onclick="exitGame()">Exit</button>
+
+</div>
+
+<script>
+
+    const playerInfo =
+        document.getElementById("playerInfo");
+
+    const board =
+        document.getElementById("board");
+
+    playerInfo.innerHTML = `
+<h3>Player Info</h3>
+Name: ${localStorage.getItem("name")} <br>
+Age: ${localStorage.getItem("age")} <br>
+Gender: ${localStorage.getItem("gender")}
+`;
+
+    async function loadBoard(){
+
+        let cls = localStorage.getItem("class");
+
+        let r =
+            await fetch(`/game/leaderboard?cls=${cls}`);
+
+        let data = await r.json();
+
+        board.innerHTML = "<h3>Leaderboard</h3>";
+
+        data.forEach((s,i)=>{
+
+            board.innerHTML += `
+        <div class="rank">
+            ${i+1}. ${s.username || s.user || "Player"}
+            (${s.age || "-"}, ${s.gender || "-"})
+            — ${s.points} pts
+        </div>`;
+        });
+    }
+
+    function exitGame(){
+
+        localStorage.clear();
+        location="login.html";
+    }
+
+</script>

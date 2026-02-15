@@ -1,0 +1,84 @@
+<head>
+    <link rel="stylesheet" href="/css/game-theme.css">
+</head>
+
+<div class="card">
+
+    <h2>Math Game</h2>
+
+    <div id="game"></div>
+
+</div>
+
+<script>
+
+    let score = 0;
+    let index = 0;
+    let questions = [];
+
+    async function load(){
+
+        let cls = localStorage.getItem("class");
+
+        let r = await fetch(`/game/questions?c=${cls}`);
+        questions = await r.json();
+
+        show();
+    }
+
+    function show(){
+
+        if(index >= questions.length){
+
+            saveScore();
+            location = "dashboard.html";
+            return;
+        }
+
+        let q = questions[index];
+
+        game.innerHTML = `
+        <h3>${q.questionText}</h3>
+        ${btn(q.optionA)}
+        ${btn(q.optionB)}
+        ${btn(q.optionC)}
+        ${btn(q.optionD)}
+    `;
+    }
+
+    function btn(x){
+        return `<button onclick="ans('${x}')">${x}</button>`;
+    }
+
+    function ans(a){
+
+        if(a === questions[index].correctAnswer){
+
+            score += 10;
+        }
+
+        // 👉 always continue
+        index++;
+        show();
+    }
+
+    async function saveScore(){
+
+        let user = localStorage.getItem("name");
+        let cls = localStorage.getItem("class");
+        let age = localStorage.getItem("age");
+        let gender = localStorage.getItem("gender");
+
+        await fetch(
+            `/game/score?user=${encodeURIComponent(user)}
+        &pts=${score}
+        &cls=${cls}
+        &age=${age}
+        &gender=${gender}`,
+            {method:"POST"}
+        );
+    }
+
+    load();
+
+</script>

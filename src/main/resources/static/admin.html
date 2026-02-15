@@ -1,0 +1,31 @@
+<h2>Admin — Add Question</h2>
+
+<textarea id="q" rows="10" cols="50">
+{
+"classLevel":1,
+"level":1,
+"questionText":"3+3?",
+"optionA":"5",
+"optionB":"6",
+"optionC":"7",
+"optionD":"8",
+"correctAnswer":"6"
+}
+</textarea>
+
+<button onclick="add()">Save</button>
+
+<script>
+    async function add(){
+
+        let data=JSON.parse(q.value);
+
+        await fetch("/admin/add",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(data)
+        });
+
+        alert("Saved!");
+    }
+</script>

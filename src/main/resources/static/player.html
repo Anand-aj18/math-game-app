@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Setup</title>
+    <link rel="stylesheet" href="/css/game-theme.css">
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Player Setup</h2>
+
+    <form onsubmit="goClass(event)">
+
+        <input id="name" placeholder="Name" required>
+
+        <select id="gender">
+            <option>Boy</option>
+            <option>Girl</option>
+        </select>
+
+        <input id="age" type="number" placeholder="Age">
+
+        <button>Continue</button>
+
+    </form>
+
+</div>
+
+<script>
+
+    function goClass(e){
+
+        e.preventDefault();
+
+        const nameVal =
+            document.getElementById("name").value;
+
+        const genderVal =
+            document.getElementById("gender").value;
+
+        const ageVal =
+            document.getElementById("age").value;
+
+        localStorage.setItem("name", nameVal);
+        localStorage.setItem("gender", genderVal);
+        localStorage.setItem("age", ageVal);
+
+        location = "class.html";
+    }
+
+</script>
+
+
+</body>
+</html>
